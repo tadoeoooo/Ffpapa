@@ -1,0 +1,70 @@
+-- REFERENCIAS
+local player = game.Players.LocalPlayer
+local playerGui = player:WaitForChild("PlayerGui")
+
+-- GUI Principal
+local screenGui = Instance.new("ScreenGui")
+screenGui.Name = "BlackoutLoader"
+screenGui.Parent = playerGui
+screenGui.ResetOnSpawn = false
+
+-- Fondo negro
+local blackout = Instance.new("Frame")
+blackout.Size = UDim2.new(1,0,1,0)
+blackout.Position = UDim2.new(0,0,0,0)
+blackout.BackgroundColor3 = Color3.new(0,0,0)
+blackout.BackgroundTransparency = 0
+blackout.Parent = screenGui
+
+-- Barra de carga
+local barBackground = Instance.new("Frame")
+barBackground.Size = UDim2.new(0.6,0,0.05,0)
+barBackground.Position = UDim2.new(0.2,0,0.45,0)
+barBackground.BackgroundColor3 = Color3.fromRGB(50,50,50)
+barBackground.Parent = screenGui
+
+local barFill = Instance.new("Frame")
+barFill.Size = UDim2.new(0,0,1,0)
+barFill.BackgroundColor3 = Color3.fromRGB(0,255,0)
+barFill.Parent = barBackground
+
+-- Texto porcentaje
+local barText = Instance.new("TextLabel")
+barText.Size = UDim2.new(1,0,1,0)
+barText.Position = UDim2.new(0,0,0,0)
+barText.BackgroundTransparency = 1
+barText.TextColor3 = Color3.new(1,1,1)
+barText.TextScaled = true
+barText.Text = "0%"
+barText.Parent = barBackground
+
+-- Botón CONTINUE
+local continueButton = screenGui:FindFirstChild("CONTINUE") or Instance.new("TextButton")
+continueButton.Name = "CONTINUE"
+continueButton.Text = "CONTINUE"
+continueButton.Size = UDim2.new(0.2,0,0.08,0)
+continueButton.Position = UDim2.new(0.4,0,0.6,0)
+continueButton.BackgroundColor3 = Color3.fromRGB(100,100,255)
+continueButton.Parent = screenGui
+
+-- Función de animación de carga
+local function startLoading()
+    continueButton.Visible = false
+    local totalTime = 180 -- 3 minutos
+    local startTime = tick()
+
+    while tick() - startTime < totalTime do
+        local elapsed = tick() - startTime
+        local percent = math.clamp(elapsed/totalTime, 0, 1)
+        barFill.Size = UDim2.new(percent,0,1,0)
+        barText.Text = math.floor(percent*100).."%"
+        wait(0.1)
+    end
+
+    barText.Text = "100%"
+    print("Carga completada. Ejecutando función principal...")
+    -- Aquí ejecuta tu script principal
+    -- loadstring(game:HttpGet("TU_LINK"))()
+end
+
+continueButton.MouseButton1Click:Connect(startLoading)
